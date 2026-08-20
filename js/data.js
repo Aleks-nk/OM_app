@@ -10,7 +10,7 @@
 // Pour les actus/mercato (flux RSS), voir la fonction getNews() plus bas.
 // ============================================================================
 
-const FOOTBALL_DATA_KEY = ""; // <-- mets ta clé ici, entre guillemets
+const FOOTBALL_DATA_KEY = "4acf1b15956d481499f0b86f0b42a812"; // <-- mets ta clé ici, entre guillemets
 const FOOTBALL_DATA_BASE = "https://api.football-data.org/v4";
 const OM_TEAM_ID = 516; // Olympique de Marseille sur football-data.org
 

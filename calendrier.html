@@ -11,7 +11,7 @@
 
   <main>
     <h1 class="page-title">Calendrier</h1>
-    <p class="page-subtitle">Les prochains matchs de l'OM, toutes compétitions.</p>
+    <p class="page-subtitle">Les prochains matchs de l'OM, toutes compétitions. <span id="updated-at" class="note" style="margin:0"></span></p>
     <div id="fixtures-list" style="display:flex;flex-direction:column;gap:12px"></div>
   </main>
 
@@ -21,12 +21,18 @@
   <script src="js/nav.js"></script>
   <script>
     renderNav("calendrier.html");
-    getFixtures().then((fixtures) => {
-      document.getElementById("fixtures-list").innerHTML =
-        fixtures.length
-          ? fixtures.map(fixtureCardHtml).join("")
-          : `<p style="opacity:.5">Aucun match programmé pour le moment.</p>`;
-    });
+
+    function refreshFixtures() {
+      getFixtures().then((fixtures) => {
+        document.getElementById("fixtures-list").innerHTML =
+          fixtures.length
+            ? fixtures.map(fixtureCardHtml).join("")
+            : `<p style="opacity:.5">Aucun match programmé pour le moment.</p>`;
+        renderUpdatedAt("updated-at");
+      });
+    }
+
+    startAutoRefresh(refreshFixtures, 120000);
   </script>
 </body>
 </html>

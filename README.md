@@ -16,6 +16,12 @@ Double-clique sur `index.html` — il s'ouvre dans ton navigateur. Tu peux navig
 4. Va dans **Settings → Pages** du dépôt, choisis la branche `main` et le dossier `/ (root)`, puis sauvegarde.
 5. Après une minute ou deux, ton site est en ligne à une adresse du type `https://ton-pseudo.github.io/om-app/`.
 
+## Mise à jour en direct
+
+Une fois la clé API branchée (voir ci-dessous), les pages Calendrier, Résultats et Classement se remettent à jour **toutes seules, toutes les 2 minutes**, tant que la page reste ouverte dans le navigateur (pas besoin de recharger). Le compte à rebours du prochain match se rafraîchit chaque minute. Un petit texte "Mis à jour à HH:MM" indique la dernière actualisation.
+
+Pas de clé branchée = ça continue de tourner avec les données de démo, qui elles ne changent pas.
+
 ## Brancher les vraies données
 
 Le site tourne avec des données de démonstration par défaut. Pour utiliser les vraies données :

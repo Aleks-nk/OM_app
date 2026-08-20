@@ -11,7 +11,7 @@
 
   <main>
     <h1 class="page-title">Résultats</h1>
-    <p class="page-subtitle">Les derniers matchs joués par l'OM.</p>
+    <p class="page-subtitle">Les derniers matchs joués par l'OM. <span id="updated-at" class="note" style="margin:0"></span></p>
     <div id="results-list" style="display:flex;flex-direction:column;gap:12px"></div>
   </main>
 
@@ -21,12 +21,18 @@
   <script src="js/nav.js"></script>
   <script>
     renderNav("resultats.html");
-    getResults().then((results) => {
-      document.getElementById("results-list").innerHTML =
-        results.length
-          ? results.map(resultCardHtml).join("")
-          : `<p style="opacity:.5">Aucun résultat pour le moment.</p>`;
-    });
+
+    function refreshResults() {
+      getResults().then((results) => {
+        document.getElementById("results-list").innerHTML =
+          results.length
+            ? results.map(resultCardHtml).join("")
+            : `<p style="opacity:.5">Aucun résultat pour le moment.</p>`;
+        renderUpdatedAt("updated-at");
+      });
+    }
+
+    startAutoRefresh(refreshResults, 120000);
   </script>
 </body>
 </html>

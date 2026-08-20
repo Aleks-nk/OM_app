@@ -84,3 +84,22 @@ function newsCardHtml(a) {
       <p>${a.title}</p>
     </a>`;
 }
+
+// ---- Rafraîchissement automatique ----
+// Relance `renderFn` immédiatement puis toutes les `intervalMs` millisecondes,
+// tant que l'onglet est visible (on ne consomme pas de requêtes API inutiles
+// quand la page est en arrière-plan). Utilisé pour que calendrier, résultats
+// et classement se mettent à jour tout seuls une fois la clé API branchée.
+function startAutoRefresh(renderFn, intervalMs = 120000) {
+  renderFn();
+  setInterval(() => {
+    if (document.visibilityState === "visible") renderFn();
+  }, intervalMs);
+}
+
+function renderUpdatedAt(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const now = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  el.textContent = `Mis à jour à ${now}`;
+}

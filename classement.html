@@ -11,7 +11,7 @@
 
   <main>
     <h1 class="page-title">Classement</h1>
-    <p class="page-subtitle">Ligue 1, saison en cours.</p>
+    <p class="page-subtitle">Ligue 1, saison en cours. <span id="updated-at" class="note" style="margin:0"></span></p>
     <table>
       <thead>
         <tr><th>#</th><th>Équipe</th><th class="center">J</th><th class="center">Diff.</th><th class="center">Pts</th></tr>
@@ -26,20 +26,27 @@
   <script src="js/nav.js"></script>
   <script>
     renderNav("classement.html");
-    getStandings().then((standings) => {
-      document.getElementById("standings-body").innerHTML = standings.map((row) => {
-        const isOM = row.team.includes("Marseille");
-        const gd = row.gd > 0 ? `+${row.gd}` : row.gd;
-        return `
-          <tr class="${isOM ? "highlight" : ""}">
-            <td>${row.pos}</td>
-            <td>${row.team}</td>
-            <td class="center">${row.played}</td>
-            <td class="center">${gd}</td>
-            <td class="center pts">${row.pts}</td>
-          </tr>`;
-      }).join("");
-    });
+
+    function refreshStandings() {
+      getStandings().then((standings) => {
+        document.getElementById("standings-body").innerHTML = standings.map((row) => {
+          const isOM = row.team.includes("Marseille");
+          const gd = row.gd > 0 ? `+${row.gd}` : row.gd;
+          return `
+            <tr class="${isOM ? "highlight" : ""}">
+              <td>${row.pos}</td>
+              <td>${row.team}</td>
+              <td class="center">${row.played}</td>
+              <td class="center">${gd}</td>
+              <td class="center pts">${row.pts}</td>
+            </tr>`;
+        }).join("");
+        renderUpdatedAt("updated-at");
+      });
+    }
+
+    // Se remet à jour toutes les 2 minutes tant que l'onglet est ouvert.
+    startAutoRefresh(refreshStandings, 120000);
   </script>
 </body>
 </html>

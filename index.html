@@ -48,28 +48,37 @@
       return `<div class="countdown-digits">${cell("J", d)}${cell("H", h)}${cell("MIN", m)}</div>`;
     }
 
-    getNextMatch().then((next) => {
-      if (!next) return;
-      document.getElementById("hero-content").innerHTML = `
-        <h1>${next.home} <span class="vs">vs</span> ${next.away}</h1>
-        <div class="countdown">
-          ${renderCountdown(next.date)}
-          <div class="hero-meta">
-            <p>${next.competition}</p>
-            <p>${next.venue}</p>
-          </div>
-        </div>`;
-    });
+    function refreshHero() {
+      getNextMatch().then((next) => {
+        if (!next) return;
+        document.getElementById("hero-content").innerHTML = `
+          <h1>${next.home} <span class="vs">vs</span> ${next.away}</h1>
+          <div class="countdown">
+            ${renderCountdown(next.date)}
+            <div class="hero-meta">
+              <p>${next.competition}</p>
+              <p>${next.venue}</p>
+            </div>
+          </div>`;
+      });
+    }
 
-    getResults().then((results) => {
-      document.getElementById("home-results").innerHTML =
-        results.slice(0, 3).map(resultCardHtml).join("");
-    });
+    function refreshHomeResults() {
+      getResults().then((results) => {
+        document.getElementById("home-results").innerHTML =
+          results.slice(0, 3).map(resultCardHtml).join("");
+      });
+    }
 
     getNews().then((news) => {
       document.getElementById("home-news").innerHTML =
         news.slice(0, 3).map(newsCardHtml).join("");
     });
+
+    // Le compte à rebours se rafraîchit chaque minute ; les résultats
+    // toutes les 2 minutes (voir startAutoRefresh dans js/nav.js).
+    startAutoRefresh(refreshHero, 60000);
+    startAutoRefresh(refreshHomeResults, 120000);
   </script>
 </body>
 </html>
