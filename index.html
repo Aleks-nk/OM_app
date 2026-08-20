@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OM Live — Olympique de Marseille</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header" id="site-header"></header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">PROCHAIN MATCH</p>
+      <div id="hero-content">
+        <h1 class="display">Chargement…</h1>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <div class="divider"><span class="line"></span><span class="label">Derniers résultats</span><span class="dot"></span><span class="line"></span></div>
+    <div class="grid cols-3" id="home-results"></div>
+    <a class="link-more" href="resultats.html">Tous les résultats →</a>
+
+    <div class="divider"><span class="line"></span><span class="label">Actus &amp; mercato</span><span class="dot"></span><span class="line"></span></div>
+    <div class="grid cols-3" id="home-news"></div>
+  </main>
+
+  <footer class="site-footer" id="site-footer"></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/nav.js"></script>
+  <script>
+    renderNav("index.html");
+
+    function renderCountdown(targetISO) {
+      const diff = new Date(targetISO) - new Date();
+      if (diff <= 0) return "";
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff / 3600000) % 24);
+      const m = Math.floor((diff / 60000) % 60);
+      const cell = (label, val) => `
+        <div class="countdown-cell">
+          <span class="num">${String(val).padStart(2, "0")}</span>
+          <span class="lbl">${label}</span>
+        </div>`;
+      return `<div class="countdown-digits">${cell("J", d)}${cell("H", h)}${cell("MIN", m)}</div>`;
+    }
+
+    getNextMatch().then((next) => {
+      if (!next) return;
+      document.getElementById("hero-content").innerHTML = `
+        <h1>${next.home} <span class="vs">vs</span> ${next.away}</h1>
+        <div class="countdown">
+          ${renderCountdown(next.date)}
+          <div class="hero-meta">
+            <p>${next.competition}</p>
+            <p>${next.venue}</p>
+          </div>
+        </div>`;
+    });
+
+    getResults().then((results) => {
+      document.getElementById("home-results").innerHTML =
+        results.slice(0, 3).map(resultCardHtml).join("");
+    });
+
+    getNews().then((news) => {
+      document.getElementById("home-news").innerHTML =
+        news.slice(0, 3).map(newsCardHtml).join("");
+    });
+  </script>
+</body>
+</html>

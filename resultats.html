@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Résultats — OM Live</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header" id="site-header"></header>
+
+  <main>
+    <h1 class="page-title">Résultats</h1>
+    <p class="page-subtitle">Les derniers matchs joués par l'OM.</p>
+    <div id="results-list" style="display:flex;flex-direction:column;gap:12px"></div>
+  </main>
+
+  <footer class="site-footer" id="site-footer"></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/nav.js"></script>
+  <script>
+    renderNav("resultats.html");
+    getResults().then((results) => {
+      document.getElementById("results-list").innerHTML =
+        results.length
+          ? results.map(resultCardHtml).join("")
+          : `<p style="opacity:.5">Aucun résultat pour le moment.</p>`;
+    });
+  </script>
+</body>
+</html>

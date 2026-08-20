@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stats joueurs — OM Live</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header" id="site-header"></header>
+
+  <main>
+    <h1 class="page-title">Stats joueurs</h1>
+    <p class="page-subtitle">Buts, passes décisives et apparitions, saison en cours.</p>
+    <table>
+      <thead>
+        <tr><th>Joueur</th><th>Poste</th><th class="center">Matchs</th><th class="center">Buts</th><th class="center">Passes D.</th></tr>
+      </thead>
+      <tbody id="players-body"></tbody>
+    </table>
+    <p class="note">Stats saisies manuellement — aucune API gratuite ne fournit de stats joueurs fiables pour la Ligue 1 (voir js/data.js).</p>
+  </main>
+
+  <footer class="site-footer" id="site-footer"></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/nav.js"></script>
+  <script>
+    renderNav("stats.html");
+    getPlayerStats().then((players) => {
+      const sorted = players.slice().sort((a, b) => b.goals - a.goals);
+      document.getElementById("players-body").innerHTML = sorted.map((p) => `
+        <tr>
+          <td>${p.name}</td>
+          <td style="opacity:.6">${p.pos}</td>
+          <td class="center">${p.apps}</td>
+          <td class="center goals">${p.goals}</td>
+          <td class="center assists">${p.assists}</td>
+        </tr>`).join("");
+    });
+  </script>
+</body>
+</html>
