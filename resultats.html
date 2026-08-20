@@ -29,7 +29,7 @@
             ? results.map(resultCardHtml).join("")
             : `<p style="opacity:.5">Aucun résultat pour le moment.</p>`;
         renderUpdatedAt("updated-at");
-      });
+      }).catch((err) => renderFetchError("results-list", err));
     }
 
     startAutoRefresh(refreshResults, 120000);

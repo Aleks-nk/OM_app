@@ -42,7 +42,7 @@
             </tr>`;
         }).join("");
         renderUpdatedAt("updated-at");
-      });
+      }).catch((err) => renderFetchError("standings-body", err, 5));
     }
 
     // Se remet à jour toutes les 2 minutes tant que l'onglet est ouvert.

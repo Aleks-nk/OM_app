@@ -29,7 +29,7 @@
             ? fixtures.map(fixtureCardHtml).join("")
             : `<p style="opacity:.5">Aucun match programmé pour le moment.</p>`;
         renderUpdatedAt("updated-at");
-      });
+      }).catch((err) => renderFetchError("fixtures-list", err));
     }
 
     startAutoRefresh(refreshFixtures, 120000);

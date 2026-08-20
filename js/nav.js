@@ -103,3 +103,16 @@ function renderUpdatedAt(elementId) {
   const now = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
   el.textContent = `Mis à jour à ${now}`;
 }
+
+// Affiche un message d'erreur lisible dans le conteneur donné au lieu de le
+// laisser vide en silence, et logue le détail dans la console (F12) pour le
+// débogage.
+function renderFetchError(containerId, error, colspan) {
+  console.error("Erreur de récupération des données :", error);
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const message = `Impossible de charger les données en direct (${error.message}). Vérifie ta clé API dans js/data.js, ou regarde la console du navigateur (F12) pour le détail.`;
+  el.innerHTML = colspan
+    ? `<tr><td colspan="${colspan}" style="color:var(--tuile)">${message}</td></tr>`
+    : `<p style="color:var(--tuile)">${message}</p>`;
+}

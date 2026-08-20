@@ -60,14 +60,14 @@
               <p>${next.venue}</p>
             </div>
           </div>`;
-      });
+      }).catch((err) => renderFetchError("hero-content", err));
     }
 
     function refreshHomeResults() {
       getResults().then((results) => {
         document.getElementById("home-results").innerHTML =
           results.slice(0, 3).map(resultCardHtml).join("");
-      });
+      }).catch((err) => renderFetchError("home-results", err));
     }
 
     getNews().then((news) => {
