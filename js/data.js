@@ -10,27 +10,45 @@
 // Pour les actus/mercato (flux RSS), voir la fonction getNews() plus bas.
 // ============================================================================
 
-const FOOTBALL_DATA_KEY = "4acf1b15956d481499f0b86f0b42a812";
+const FOOTBALL_DATA_KEY = "4acf1b15956d481499f0b86f0b42a812"; // <-- mets ta clé ici, entre guillemets
 const FOOTBALL_DATA_BASE = "https://api.football-data.org/v4";
 const OM_TEAM_ID = 516; // Olympique de Marseille sur football-data.org
 
 const USE_LIVE_DATA = Boolean(FOOTBALL_DATA_KEY);
 
 // football-data.org bloque les appels faits directement depuis un navigateur
-// (politique CORS) : sans ce relais, la requête échoue en silence et rien ne
-// s'affiche. On passe donc par un relais public (allorigins.win) qui ajoute
-// l'en-tête manquant, et on transmet la clé en paramètre d'URL (_apiKey)
-// plutôt qu'en en-tête, car les en-têtes personnalisés ne passent pas
-// toujours par ce type de relais.
+// (politique CORS) : sans relais, la requête échoue en silence et rien ne
+// s'affiche. On passe donc par un relais public qui ajoute l'en-tête
+// manquant, et on transmet la clé en paramètre d'URL (_apiKey) plutôt qu'en
+// en-tête, car les en-têtes personnalisés ne passent pas toujours par ce
+// type de relais.
+//
+// Les relais publics gratuits tombent parfois en panne, donc on en essaie
+// plusieurs dans l'ordre et on garde le premier qui répond.
+const CORS_PROXIES = [
+  (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  (url) => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+  (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+];
+
 async function fdFetch(path) {
   const sep = path.includes("?") ? "&" : "?";
   const target = `${FOOTBALL_DATA_BASE}${path}${sep}_apiKey=${FOOTBALL_DATA_KEY}`;
-  const proxied = `https://api.allorigins.win/raw?url=${encodeURIComponent(target)}`;
-  const res = await fetch(proxied);
-  if (!res.ok) throw new Error(`football-data.org: ${res.status}`);
-  const data = await res.json();
-  if (data.errorCode) throw new Error(`football-data.org: ${data.message}`);
-  return data;
+
+  let lastError;
+  for (const buildProxyUrl of CORS_PROXIES) {
+    try {
+      const res = await fetch(buildProxyUrl(target));
+      if (!res.ok) throw new Error(`relais HTTP ${res.status}`);
+      const data = await res.json();
+      if (data.errorCode) throw new Error(`football-data.org: ${data.message}`);
+      return data;
+    } catch (err) {
+      lastError = err;
+      console.warn("Relais CORS indisponible, essai du suivant…", err);
+    }
+  }
+  throw new Error(`aucun relais disponible (${lastError?.message || "erreur inconnue"})`);
 }
 
 // ---- Données de démonstration ----
